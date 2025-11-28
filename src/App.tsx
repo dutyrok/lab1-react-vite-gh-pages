@@ -1,6 +1,7 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Counter from './components/Counter'
+import FetchUsers from './components/FetchUsers'
 import './App.css'
 
 function App() {
@@ -15,10 +16,9 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
-	  <Counter /> {/* ← Теперь здесь только компонент */}
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Counter />
+	  <FetchUsers />
+
     </>
   )
 }
