@@ -7,6 +7,7 @@ import type { User } from '../types/User'
 const FetchUsers = () => {
 	const [users, setUsers] = useState<User[]>([])
 	const [loading, setLoading] = useState(false)
+	const [searchTerm, setSearchTerm] = useState('')
 
 	const handleUserLoad = async () => {
 		setLoading(true)
@@ -19,6 +20,12 @@ const FetchUsers = () => {
 			setLoading(false)
 		}
 	}
+
+	const filteredUsers = searchTerm.length >= 3
+    ? users.filter(user =>
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : users
 
 	return(
 		<React.Fragment>
@@ -34,6 +41,31 @@ const FetchUsers = () => {
     		{users.length > 0 && (
     		  <div style={{ marginTop: '20px' }}>
     		    <h2>Users Table</h2>
+
+				<div style={{ marginBottom: '20px' }}>
+					<input
+						type="text"
+						placeholder="Поиск по email"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+						style={{
+							padding: '10px',
+							width: '300px',
+							border: '1px solid #ddd',
+							borderRadius: '4px',
+							fontSize: '16px'
+						}}
+						/>
+						{searchTerm.length > 0 && searchTerm.length < 3 && (
+						<div style={{
+							color: '#666',
+							fontSize: '14px',
+							marginTop: '5px'
+						}}>
+							Введите 3 или более символов для поиска
+						</div>
+						)}
+				</div>
     		    <table style={{
     		      width: '100%',
     		      borderCollapse: 'collapse',
@@ -51,18 +83,45 @@ const FetchUsers = () => {
     		        </tr>
     		      </thead>
     		      <tbody>
-    		        {users.map(user => (
-    		          <tr key={user.id}>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.id}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.name}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.username}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.email}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.address.city}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.phone}</td>
-    		            <td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.company.name}</td>
-    		          </tr>
-    		        ))}
-    		      </tbody>
+					{filteredUsers.length > 0 ? (
+						filteredUsers.map(user => (
+						<tr key={user.id}>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.id}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.name}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.username}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.email}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.address.city}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.phone}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.company.name}</td>
+						</tr>
+						))
+					) : searchTerm.length >= 3 ? (
+						<tr>
+						<td
+							colSpan={7}
+							style={{
+								padding: '20px',
+								textAlign: 'center',
+								border: '1px solid #ddd'
+							}}
+						>
+							Ничего не найдено
+						</td>
+						</tr>
+					) : (
+						users.map(user => (
+						<tr key={user.id}>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.id}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.name}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.username}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.email}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.address.city}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.phone}</td>
+							<td style={{ padding: '8px', border: '1px solid #ddd' }}>{user.company.name}</td>
+						</tr>
+						))
+					)}
+				  </tbody>
     		    </table>
     		  </div>
     		)}
